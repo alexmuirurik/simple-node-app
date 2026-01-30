@@ -8,6 +8,7 @@ export const userSchema = z.object({
 })
 
 export const postSchema = z.object({
+    authorId: z.number(),
     title: z.string(),
     content: z.string(),
     published: z.boolean()

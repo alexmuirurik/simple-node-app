@@ -19,8 +19,8 @@ const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
-  "activeProvider": "sqlite",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../prisma/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel User {\n  id        Int       @id @default(autoincrement())\n  email     String    @unique\n  firstName String\n  lastName  String\n  password  String\n  OTP       String?\n  posts     Post[]\n  likes     Like[]\n  comments  Comment[]\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n}\n\nmodel Post {\n  id        Int       @id @default(autoincrement())\n  authorId  Int\n  title     String\n  content   String?\n  published Boolean   @default(false)\n  author    User      @relation(fields: [authorId], references: [id])\n  comments  Comment[]\n  likes     Like[]\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n}\n\nmodel Comment {\n  id       Int    @id @default(autoincrement())\n  postId   Int\n  content  String\n  post     Post   @relation(fields: [postId], references: [id])\n  author   User   @relation(fields: [authorId], references: [id])\n  authorId Int\n}\n\nmodel Like {\n  id        Int      @id @default(autoincrement())\n  postId    Int\n  userId    Int\n  emoji     String\n  post      Post     @relation(fields: [postId], references: [id])\n  user      User     @relation(fields: [userId], references: [id])\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "activeProvider": "postgresql",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../prisma/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        Int       @id @default(autoincrement())\n  email     String    @unique\n  firstName String\n  lastName  String\n  password  String\n  OTP       String?\n  posts     Post[]\n  likes     Like[]\n  comments  Comment[]\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n}\n\nmodel Post {\n  id        Int       @id @default(autoincrement())\n  authorId  Int\n  title     String\n  content   String?\n  published Boolean   @default(false)\n  author    User      @relation(fields: [authorId], references: [id])\n  comments  Comment[]\n  likes     Like[]\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n}\n\nmodel Comment {\n  id       Int    @id @default(autoincrement())\n  postId   Int\n  content  String\n  post     Post   @relation(fields: [postId], references: [id])\n  author   User   @relation(fields: [authorId], references: [id])\n  authorId Int\n}\n\nmodel Like {\n  id        Int      @id @default(autoincrement())\n  postId    Int\n  userId    Int\n  emoji     String\n  post      Post     @relation(fields: [postId], references: [id])\n  user      User     @relation(fields: [userId], references: [id])\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -37,10 +37,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
   },
 
